@@ -67,7 +67,10 @@ uri_to_path(const char* uri) {
 struct Node {
 	inline Node(const LilvNode* node) : me(lilv_node_duplicate(node)) {}
 	inline Node(const Node& copy)     : me(lilv_node_duplicate(copy.me)) {}
-
+	#if __cplusplus >= 201103L
+	inline Node(Node&& moved)          : me(moved.me) { moved.me = nullptr; }
+	#endif
+	
 	inline ~Node() { lilv_node_free(me); }
 
 	inline bool equals(const Node& other) const {
